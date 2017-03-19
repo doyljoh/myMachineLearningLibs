@@ -3,6 +3,8 @@ DaraAI
 
 A reposity of machine learning functions and algorithms.
 
+Author: John Doyle
+
 Project Organization
 ------------
 
