@@ -1,7 +1,7 @@
-NumerAI
+DaraAI 
 ==============================
 
-machine learning repo for the numer.ai comp
+A reposity of machine learning functions and algorithms.
 
 Project Organization
 ------------
