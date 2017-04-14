@@ -5,19 +5,19 @@ Build a classifier to perform binary classification of Numerai data
 Author: John Doyle
 """
 
-import sys
 import os
 import logging
 from time import gmtime, strftime
 
 #add local cod directories
-sys.path.append("../src")
-from data import make_dataset
+from src.dataPrep.run_ETL import ETL
+from src.features.build_features import FE
 
 def main():
 
     #set paths
-    cwd = os.getcwd()
+    cwd = os.path.abspath(os.path.join(os.curdir))
+
     dirLogs = os.path.join(cwd, "logs")
     dirData = os.path.join(cwd, "data")
     dirModels = os.path.join(cwd, "models")
@@ -30,25 +30,21 @@ def main():
     logging.info("{0}: Model Directory {1}".format(strftime("%Y-%m-%d %H:%M:%S", gmtime()), dirModels))
     logging.info("{0}: Report Directory {1}".format(strftime("%Y-%m-%d %H:%M:%S", gmtime()), dirReports))
 
-    # Run ETL
-    make_dataset("/home/john/Projects/RepoNumerAI/data/Configs/config_NumerAI_v1.json")
+    #Run ETL
+    etl = ETL(dirData + "/Configs/config_NumerAI_v1.json")
+    if etl.config["run"]=="True":
+        etl.numer(dirData + "/raw/")
 
-
-    # Load Datasets
-    logging.info("{0}: Load datasets into memory".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
-
-    # Create Training, Test and Validation Datasets
-    logging.info("{0}: Create Training, Test and Validation Datasets".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
-
-    # Clean data and build features dataset
-    logging.info("{0}: Clean data and build features datasets".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
+    #Build Features
+    fe = FE(dirData + "/Configs/config_NumerAI_v1.json")
+    if fe.config["run"]=="True":
+        fe.numer(dirData + "/raw/")
 
     # Train Models and Optimise
-    logging.info("{0}: Train Models and Optimise".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
+    #logging.info("{0}: Train Models and Optimise".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
 
     # Predict Competition Scores and output Results
-    logging.info("{0}: Predict Competition Scores and output Results".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
-
+    #logging.info("{0}: Predict Competition Scores and output Results".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
 
 
 if __name__ == '__main__':
